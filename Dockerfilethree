@@ -1,0 +1,17 @@
+# For more information, please refer to https://aka.ms/vscode-docker-python
+FROM --platform=amd64 python:3.10-slim
+
+WORKDIR /app
+
+RUN mkdir /app/files
+
+# Install pip requirements
+COPY /embeddinglocal.py /app
+COPY /requirements.txt /app
+
+RUN pip install -r requirements.txt
+
+EXPOSE 8008
+
+# During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
+CMD ["gunicorn", "embeddinglocal:app", "-b", "0.0.0.0:8008", "--timeout", "60"]
